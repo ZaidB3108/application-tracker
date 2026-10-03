@@ -11,12 +11,13 @@ interface JobApplication {
   company: string;
   role: string;
   location: string;
+  notes: string;
   appliedDate: string;
   status: ApplicationStatus;
   logo: string;
 }
 
-interface ApiApplication { id: number; userId: number; companyId: number; roleTitle: string; workMode: string; appliedDate: string; status: ApplicationStatus; }
+interface ApiApplication { id: number; userId: number; companyId: number; roleTitle: string; workMode: string; appliedDate: string; status: ApplicationStatus; notes: string; }
 interface ApiCompany { id: number; name: string; location: string; }
 interface StatusEvent { id: number; status: ApplicationStatus; changedAt: string; }
 interface InterviewEvent { id: number; interviewType: string; interviewDate: string; interviewerName: string; result: string; notes: string; }
@@ -37,10 +38,11 @@ export class App {
   protected readonly statusEvents = signal<StatusEvent[]>([]);
   protected readonly interviewEvents = signal<InterviewEvent[]>([]);
   protected interviewDraft = { interviewType: 'Technical interview', interviewDate: '', interviewerName: '', notes: '' };
+  protected notesDraft = '';
   protected readonly search = signal('');
   protected readonly showForm = signal(false);
   protected readonly applications = signal<JobApplication[]>([]);
-  protected draft: Omit<JobApplication, 'id' | 'logo'> = this.emptyDraft();
+  protected draft: Omit<JobApplication, 'id' | 'logo' | 'notes'> = this.emptyDraft();
   protected readonly visibleApplications = computed(() => {
     const query = this.search().trim().toLowerCase();
     return this.applications().filter((a) => !query || `${a.company} ${a.role}`.toLowerCase().includes(query));
@@ -68,7 +70,7 @@ export class App {
       appliedDate: application.appliedDate, status: application.status, source: 'Applyflow', notes: '',
     }))).subscribe({
       next: (saved) => {
-        this.applications.update((current) => [{ ...application, id: saved.id, logo: application.company.charAt(0).toUpperCase() }, ...current]);
+        this.applications.update((current) => [{ ...application, notes: '', id: saved.id, logo: application.company.charAt(0).toUpperCase() }, ...current]);
         this.draft = this.emptyDraft(); this.showForm.set(false);
       },
       error: () => this.formError = 'Could not save the application. Check that the backend is running.',
@@ -89,10 +91,19 @@ export class App {
   }
   protected openActivity(application: JobApplication) {
     this.activityApplication.set(application);
+    this.notesDraft = application.notes;
     forkJoin({
       history: this.http.get<StatusEvent[]>(`http://localhost:8081/api/applications/${application.id}/history`),
       interviews: this.http.get<InterviewEvent[]>(`http://localhost:8081/api/applications/${application.id}/interviews`),
     }).subscribe({ next: ({ history, interviews }) => { this.statusEvents.set(history); this.interviewEvents.set(interviews); } });
+  }
+  protected saveNotes() {
+    const application = this.activityApplication();
+    if (!application) return;
+    this.http.patch(`http://localhost:8081/api/applications/${application.id}/notes`, { notes: this.notesDraft }).subscribe({
+      next: () => this.applications.update((current) => current.map((item) => item.id === application.id ? { ...item, notes: this.notesDraft } : item)),
+      error: () => this.formError = 'Could not save the note.',
+    });
   }
   protected scheduleInterview() {
     const application = this.activityApplication();
@@ -124,11 +135,11 @@ export class App {
         this.applications.set(applications.map((application) => {
           const company = companiesById.get(application.companyId);
           const name = company?.name ?? 'Unknown company';
-          return { id: application.id, company: name, role: application.roleTitle, location: company?.location || application.workMode || 'Not specified', appliedDate: application.appliedDate, status: application.status, logo: name.charAt(0).toUpperCase() };
+          return { id: application.id, company: name, role: application.roleTitle, location: company?.location || application.workMode || 'Not specified', appliedDate: application.appliedDate, status: application.status, notes: application.notes || '', logo: name.charAt(0).toUpperCase() };
         }));
       },
       error: () => this.formError = 'Could not load saved applications. Check that the backend is running.',
     });
   }
-  private emptyDraft(): Omit<JobApplication, 'id' | 'logo'> { return { company: '', role: '', location: '', appliedDate: '', status: 'SUBMITTED' }; }
+  private emptyDraft(): Omit<JobApplication, 'id' | 'logo' | 'notes'> { return { company: '', role: '', location: '', appliedDate: '', status: 'SUBMITTED' }; }
 }

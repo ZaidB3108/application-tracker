@@ -52,6 +52,13 @@ public class JobApplicationController {
         historyRepository.save(new StatusHistory(saved.getId(), saved.getStatus()));
         return saved;
     }
+    @PatchMapping("/{id}/notes")
+    public JobApplication updateNotes(@PathVariable Long id, @RequestBody NotesUpdateRequest request) {
+        JobApplication application = repository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Application not found: " + id));
+        application.updateNotes(request.notes());
+        return repository.save(application);
+    }
 
     @GetMapping("/{id}/history") public List<StatusHistory> history(@PathVariable Long id) { return historyRepository.findAllByApplicationIdOrderByChangedAtDesc(id); }
     @GetMapping("/{id}/interviews") public List<Interview> interviews(@PathVariable Long id) { return interviewRepository.findAllByApplicationIdOrderByInterviewDateAsc(id); }

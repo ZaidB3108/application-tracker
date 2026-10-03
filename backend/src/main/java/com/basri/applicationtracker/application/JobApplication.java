@@ -51,6 +51,7 @@ public class JobApplication {
         appliedDate = request.appliedDate(); status = request.status(); notes = request.notes();
     }
     public void updateStatus(String newStatus) { status = newStatus; }
+    public void updateNotes(String newNotes) { notes = newNotes; }
 
     public Long getId() { return id; }
     public Long getUserId() { return userId; }

@@ -1,13 +1,133 @@
 <main class="shell">
-  <aside class="sidebar"><a class="brand"><span>✦</span> applyflow</a><nav><a class="nav-item active">⌂ <em>Dashboard</em></a><a class="nav-item">▦ <em>Applications</em><b>{{ total() }}</b></a><a class="nav-item">◷ <em>Activity</em></a><a class="nav-item">⌁ <em>Insights</em></a></nav><div class="sidebar-bottom"><a class="nav-item">⚙ <em>Settings</em></a><div class="profile"><span class="avatar">B</span><div><strong>Basri</strong><small>Job seeker</small></div></div></div></aside>
+  <aside class="sidebar"><a class="brand"><span>✦</span> applyflow</a>
+    <nav><a class="nav-item active">⌂ <em>Dashboard</em></a><a class="nav-item">▦ <em>Applications</em><b>{{ total()
+          }}</b></a><a class="nav-item">◷ <em>Activity</em></a><a class="nav-item">⌁ <em>Insights</em></a></nav>
+    <div class="sidebar-bottom"><a class="nav-item">⚙ <em>Settings</em></a>
+      <div class="profile"><span class="avatar">B</span>
+        <div><strong>Basri</strong><small>Job seeker</small></div>
+      </div>
+    </div>
+  </aside>
   <section class="workspace">
-    <header><div><p class="eyebrow">OCTOBER 2026</p><h1>Good morning, Basri <span>✦</span></h1><p class="subtitle">Here’s how your job search is moving.</p></div><div class="header-actions"><label class="search">⌕<input [value]="search()" (input)="search.set($any($event.target).value)" placeholder="Search applications" /></label><button class="avatar">B</button></div></header>
-    <section class="metrics"><article class="metric"><i class="lavender">▦</i><div><p>Total applications</p><strong>{{ total() }}</strong><small>All time</small></div></article><article class="metric"><i class="aqua">◌</i><div><p>Response rate</p><strong>{{ responseRate() }}%</strong><small class="positive">↗ Looking good</small></div></article><article class="metric"><i class="peach">◎</i><div><p>Interviews</p><strong>{{ interviews() }}</strong><small>In progress</small></div></article><article class="metric"><i class="pink">✦</i><div><p>Offers</p><strong>{{ offers() }}</strong><small>Keep going!</small></div></article></section>
-    <section class="board-heading"><div><h2>Application pipeline</h2><p>Track your progress as you hear back.</p></div><button class="primary" (click)="showForm.set(true)">＋ Add application</button></section>
-    <section class="board">@for (column of [{ status: 'SUBMITTED', label: 'Applied', color: 'blue' }, { status: 'UNDER_REVIEW', label: 'Under review', color: 'violet' }, { status: 'ONLINE_ASSESSMENT', label: 'Online assessment', color: 'orange' }, { status: 'INTERVIEW', label: 'Interview', color: 'green' }, { status: 'OFFER', label: 'Offer', color: 'gold' }, { status: 'REJECTED', label: 'Rejected', color: 'red' }]; track column.status) {<section class="column"><div class="column-title"><i class="dot {{ column.color }}"></i><h3>{{ column.label }}</h3><b>{{ applicationsFor($any(column.status)).length }}</b></div><div class="card-list">@for (application of applicationsFor($any(column.status)); track application.id) {<article class="application-card"><div class="card-top"><span class="company-logo">{{ application.logo }}</span><button (click)="deleteApplication(application.id)">×</button></div><h4>{{ application.company }}</h4><p>{{ application.role }}</p><select class="status-select" [value]="application.status" (change)="updateStatus(application, $any($event.target).value)">@for (status of ['SUBMITTED', 'UNDER_REVIEW', 'ONLINE_ASSESSMENT', 'INTERVIEW', 'OFFER', 'REJECTED']; track status) {<option [value]="status">{{ statusLabel($any(status)) }}</option>}</select><div class="card-footer"><span>⌖ {{ application.location }}</span><time>{{ application.appliedDate }}</time></div><button class="activity-button" (click)="openActivity(application)">View activity →</button></article>} @empty {<p class="empty">Nothing here yet</p>}</div></section>}</section>
-    @if (applicationsFor('REJECTED').length) {<section class="rejection-strip"><span>✉</span><strong>{{ applicationsFor('REJECTED').length }} rejection email received</strong><p>Track it here, then focus on what’s next.</p><button>View rejections →</button></section>}
+    <header>
+      <div>
+        <p class="eyebrow">OCTOBER 2026</p>
+        <h1>Good morning, Basri <span>✦</span></h1>
+        <p class="subtitle">Here’s how your job search is moving.</p>
+      </div>
+      <div class="header-actions"><label class="search">⌕<input [value]="search()"
+            (input)="search.set($any($event.target).value)" placeholder="Search applications" /></label><button
+          class="avatar">B</button></div>
+    </header>
+    <section class="metrics">
+      <article class="metric"><i class="lavender">▦</i>
+        <div>
+          <p>Total applications</p><strong>{{ total() }}</strong><small>All time</small>
+        </div>
+      </article>
+      <article class="metric"><i class="aqua">◌</i>
+        <div>
+          <p>Response rate</p><strong>{{ responseRate() }}%</strong><small class="positive">↗ Looking good</small>
+        </div>
+      </article>
+      <article class="metric"><i class="peach">◎</i>
+        <div>
+          <p>Interviews</p><strong>{{ interviews() }}</strong><small>In progress</small>
+        </div>
+      </article>
+      <article class="metric"><i class="pink">✦</i>
+        <div>
+          <p>Offers</p><strong>{{ offers() }}</strong><small>Keep going!</small>
+        </div>
+      </article>
+    </section>
+    <section class="board-heading">
+      <div>
+        <h2>Application pipeline</h2>
+        <p>Track your progress as you hear back.</p>
+      </div><button class="primary" (click)="showForm.set(true)">＋ Add application</button>
+    </section>
+    <section class="board">@for (column of [{ status: 'SUBMITTED', label: 'Applied', color: 'blue' }, { status:
+      'UNDER_REVIEW', label: 'Under review', color: 'violet' }, { status: 'ONLINE_ASSESSMENT', label: 'Online
+      assessment', color: 'orange' }, { status: 'INTERVIEW', label: 'Interview', color: 'green' }, { status: 'OFFER',
+      label: 'Offer', color: 'gold' }, { status: 'REJECTED', label: 'Rejected', color: 'red' }]; track column.status) {
+      <section class="column">
+        <div class="column-title"><i class="dot {{ column.color }}"></i>
+          <h3>{{ column.label }}</h3><b>{{ applicationsFor($any(column.status)).length }}</b>
+        </div>
+        <div class="card-list">@for (application of applicationsFor($any(column.status)); track application.id) {
+          <article class="application-card">
+            <div class="card-top"><span class="company-logo">{{ application.logo }}</span><button
+                (click)="deleteApplication(application.id)">×</button></div>
+            <h4>{{ application.company }}</h4>
+            <p>{{ application.role }}</p><select class="status-select" [value]="application.status"
+              (change)="updateStatus(application, $any($event.target).value)">@for (status of ['SUBMITTED',
+              'UNDER_REVIEW', 'ONLINE_ASSESSMENT', 'INTERVIEW', 'OFFER', 'REJECTED']; track status) {<option
+                [value]="status">{{ statusLabel($any(status)) }}</option>}</select>
+            <div class="card-footer"><span>⌖ {{ application.location }}</span><time>{{ application.appliedDate }}</time>
+            </div><button class="activity-button" (click)="openActivity(application)">View activity →</button>
+          </article>} @empty {<p class="empty">Nothing here yet</p>}</div>
+      </section>}</section>
+    @if (applicationsFor('REJECTED').length) {<section class="rejection-strip"><span>✉</span><strong>{{
+        applicationsFor('REJECTED').length }} rejection email received</strong>
+      <p>Track it here, then focus on what’s next.</p><button>View rejections →</button>
+    </section>}
   </section>
 </main>
-@if (showForm()) {<div class="backdrop" (click)="showForm.set(false)"></div><form class="add-dialog" (ngSubmit)="addApplication()"><div><section><p class="eyebrow">NEW APPLICATION</p><h2>Add an opportunity</h2></section><button type="button" (click)="showForm.set(false)">×</button></div><label>Company<input [(ngModel)]="draft.company" name="company" placeholder="e.g. Airbnb" required /></label><label>Role<input [(ngModel)]="draft.role" name="role" placeholder="e.g. Software Engineer" required /></label><section class="form-grid"><label>Location<input [(ngModel)]="draft.location" name="location" placeholder="Remote" /></label><label>Status<select [(ngModel)]="draft.status" name="status">@for (status of ['SUBMITTED', 'UNDER_REVIEW', 'ONLINE_ASSESSMENT', 'INTERVIEW', 'OFFER', 'REJECTED']; track status) {<option [value]="status">{{ statusLabel($any(status)) }}</option>}</select></label></section><label>Applied date<input [(ngModel)]="draft.appliedDate" name="appliedDate" type="date" /></label>@if (formError) {<p class="form-error">{{ formError }}</p>}<button class="primary" type="submit">Save application</button></form>}
-@if (showProfile()) {<div class="backdrop"></div><form class="add-dialog" (ngSubmit)="createProfile()"><div><section><p class="eyebrow">WELCOME TO APPLYFLOW</p><h2>Create your profile</h2><p class="profile-copy">Your personal workspace starts here.</p></section></div><label>Full name<input [(ngModel)]="profile.fullName" name="fullName" placeholder="Your name" required /></label><label>Email<input [(ngModel)]="profile.email" name="email" type="email" placeholder="you@example.com" required /></label><label>Password<input [(ngModel)]="profile.password" name="password" type="password" minlength="8" placeholder="At least 8 characters" required /></label>@if (profileError) {<p class="form-error">{{ profileError }}</p>}<button class="primary" type="submit">Create my profile</button></form>}
-@if (activityApplication(); as application) {<div class="backdrop" (click)="activityApplication.set(null)"></div><section class="add-dialog"><div><section><p class="eyebrow">APPLICATION ACTIVITY</p><h2>{{ application.company }}</h2><p class="profile-copy">{{ application.role }}</p></section><button (click)="activityApplication.set(null)">×</button></div><h3>Status history</h3>@for (event of statusEvents(); track event.id) {<p><strong>{{ statusLabel(event.status) }}</strong> · {{ event.changedAt | date:'medium' }}</p>} @empty {<p class="profile-copy">No activity has been recorded yet.</p>}<h3>Interviews</h3>@for (interview of interviewEvents(); track interview.id) {<p><strong>{{ interview.interviewType }}</strong> · {{ interview.interviewDate | date:'medium' }}</p>} @empty {<p class="profile-copy">No interviews scheduled yet.</p>}<form (ngSubmit)="scheduleInterview()"><p class="eyebrow">SCHEDULE INTERVIEW</p><label>Type<input [(ngModel)]="interviewDraft.interviewType" name="interviewType" required /></label><label>Date and time<input [(ngModel)]="interviewDraft.interviewDate" name="interviewDate" type="datetime-local" required /></label><label>Interviewer<input [(ngModel)]="interviewDraft.interviewerName" name="interviewer" placeholder="Optional" /></label><label>Notes<input [(ngModel)]="interviewDraft.notes" name="interviewNotes" placeholder="Optional" /></label><button class="primary" type="submit">Schedule interview</button></form></section>}
+@if (showForm()) {<div class="backdrop" (click)="showForm.set(false)"></div>
+<form class="add-dialog" (ngSubmit)="addApplication()">
+  <div>
+    <section>
+      <p class="eyebrow">NEW APPLICATION</p>
+      <h2>Add an opportunity</h2>
+    </section><button type="button" (click)="showForm.set(false)">×</button>
+  </div><label>Company<input [(ngModel)]="draft.company" name="company" placeholder="e.g. Airbnb"
+      required /></label><label>Role<input [(ngModel)]="draft.role" name="role" placeholder="e.g. Software Engineer"
+      required /></label>
+  <section class="form-grid"><label>Location<input [(ngModel)]="draft.location" name="location"
+        placeholder="Remote" /></label><label>Status<select [(ngModel)]="draft.status" name="status">@for (status of
+        ['SUBMITTED', 'UNDER_REVIEW', 'ONLINE_ASSESSMENT', 'INTERVIEW', 'OFFER', 'REJECTED']; track status) {<option
+          [value]="status">{{ statusLabel($any(status)) }}</option>}</select></label></section><label>Applied date<input
+      [(ngModel)]="draft.appliedDate" name="appliedDate" type="date" /></label>@if (formError) {<p class="form-error">{{
+    formError }}</p>}<button class="primary" type="submit">Save application</button>
+</form>}
+@if (showProfile()) {<div class="backdrop"></div>
+<form class="add-dialog" (ngSubmit)="createProfile()">
+  <div>
+    <section>
+      <p class="eyebrow">WELCOME TO APPLYFLOW</p>
+      <h2>Create your profile</h2>
+      <p class="profile-copy">Your personal workspace starts here.</p>
+    </section>
+  </div><label>Full name<input [(ngModel)]="profile.fullName" name="fullName" placeholder="Your name"
+      required /></label><label>Email<input [(ngModel)]="profile.email" name="email" type="email"
+      placeholder="you@example.com" required /></label><label>Password<input [(ngModel)]="profile.password"
+      name="password" type="password" minlength="8" placeholder="At least 8 characters" required /></label>@if
+  (profileError) {<p class="form-error">{{ profileError }}</p>}<button class="primary" type="submit">Create my
+    profile</button>
+</form>}
+@if (activityApplication(); as application) {<div class="backdrop" (click)="activityApplication.set(null)"></div>
+<section class="add-dialog">
+  <div>
+    <section>
+      <p class="eyebrow">APPLICATION ACTIVITY</p>
+      <h2>{{ application.company }}</h2>
+      <p class="profile-copy">{{ application.role }}</p>
+    </section><button (click)="activityApplication.set(null)">×</button>
+  </div>
+  <h3>Notes</h3><textarea [(ngModel)]="notesDraft" name="applicationNotes"
+    placeholder="Rejection email, OA details, recruiter messages, or offer notes"></textarea><button class="primary"
+    (click)="saveNotes()">Save notes</button>
+  <h3>Status history</h3>@for (event of statusEvents(); track event.id) {<p><strong>{{ statusLabel(event.status)
+      }}</strong> · {{ event.changedAt | date:'medium' }}</p>} @empty {<p class="profile-copy">No activity has been
+    recorded yet.</p>}<h3>Interviews</h3>@for (interview of interviewEvents(); track interview.id) {<p><strong>{{
+      interview.interviewType }}</strong> · {{ interview.interviewDate | date:'medium' }}</p>} @empty {<p
+    class="profile-copy">No interviews scheduled yet.</p>}<form (ngSubmit)="scheduleInterview()">
+    <p class="eyebrow">SCHEDULE INTERVIEW</p><label>Type<input [(ngModel)]="interviewDraft.interviewType"
+        name="interviewType" required /></label><label>Date and time<input [(ngModel)]="interviewDraft.interviewDate"
+        name="interviewDate" type="datetime-local" required /></label><label>Interviewer<input
+        [(ngModel)]="interviewDraft.interviewerName" name="interviewer"
+        placeholder="Optional" /></label><label>Notes<input [(ngModel)]="interviewDraft.notes" name="interviewNotes"
+        placeholder="Optional" /></label><button class="primary" type="submit">Schedule interview</button>
+  </form>
+</section>}
