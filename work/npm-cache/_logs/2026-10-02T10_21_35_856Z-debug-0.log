@@ -1,0 +1,143 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.16.0
+2 info using node@v24.18.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\basri\Documents\Codex\2026-10-02\do\application-tracker\frontend\.npmrc
+5 silly config load:file:C:\Users\basri\.npmrc
+6 silly config load:file:C:\Users\basri\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm install
+8 verbose argv "install"
+9 verbose logfile logs-max:10 dir:C:\Users\basri\Documents\Codex\2026-10-02\do\application-tracker\work\npm-cache\_logs\2026-10-02T10_21_35_856Z-
+10 verbose logfile C:\Users\basri\Documents\Codex\2026-10-02\do\application-tracker\work\npm-cache\_logs\2026-10-02T10_21_35_856Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 silly idealTree buildDeps
+14 silly fetch manifest @angular/common@^22.2.0
+15 silly packumentCache full:https://registry.npmjs.org/@angular%2fcommon cache-miss
+16 http fetch GET https://registry.npmjs.org/@angular%2fcommon attempt 1 failed with EACCES
+17 http fetch GET https://registry.npmjs.org/npm attempt 1 failed with EACCES
+18 http fetch GET https://registry.npmjs.org/@angular%2fcommon attempt 2 failed with EACCES
+19 http fetch GET https://registry.npmjs.org/npm attempt 2 failed with EACCES
+20 http fetch GET https://registry.npmjs.org/@angular%2fcommon attempt 3 failed with EACCES
+21 silly fetch manifest @angular/compiler@^22.2.0
+22 silly packumentCache full:https://registry.npmjs.org/@angular%2fcompiler cache-miss
+23 http fetch GET https://registry.npmjs.org/npm attempt 3 failed with EACCES
+24 http fetch GET https://registry.npmjs.org/@angular%2fcompiler attempt 1 failed with EACCES
+25 http fetch GET https://registry.npmjs.org/@angular%2fcompiler attempt 2 failed with EACCES
+26 http fetch GET https://registry.npmjs.org/@angular%2fcompiler attempt 3 failed with EACCES
+27 silly fetch manifest @angular/core@^22.2.0
+28 silly packumentCache full:https://registry.npmjs.org/@angular%2fcore cache-miss
+29 http fetch GET https://registry.npmjs.org/@angular%2fcore attempt 1 failed with EACCES
+30 http fetch GET https://registry.npmjs.org/@angular%2fcore attempt 2 failed with EACCES
+31 http fetch GET https://registry.npmjs.org/@angular%2fcore attempt 3 failed with EACCES
+32 silly fetch manifest @angular/forms@^22.2.0
+33 silly packumentCache full:https://registry.npmjs.org/@angular%2fforms cache-miss
+34 http fetch GET https://registry.npmjs.org/@angular%2fforms attempt 1 failed with EACCES
+35 http fetch GET https://registry.npmjs.org/@angular%2fforms attempt 2 failed with EACCES
+36 http fetch GET https://registry.npmjs.org/@angular%2fforms attempt 3 failed with EACCES
+37 silly fetch manifest @angular/platform-browser@^22.2.0
+38 silly packumentCache full:https://registry.npmjs.org/@angular%2fplatform-browser cache-miss
+39 http fetch GET https://registry.npmjs.org/@angular%2fplatform-browser attempt 1 failed with EACCES
+40 http fetch GET https://registry.npmjs.org/@angular%2fplatform-browser attempt 2 failed with EACCES
+41 http fetch GET https://registry.npmjs.org/@angular%2fplatform-browser attempt 3 failed with EACCES
+42 silly fetch manifest @angular/router@^22.2.0
+43 silly packumentCache full:https://registry.npmjs.org/@angular%2frouter cache-miss
+44 http fetch GET https://registry.npmjs.org/@angular%2frouter attempt 1 failed with EACCES
+45 http fetch GET https://registry.npmjs.org/@angular%2frouter attempt 2 failed with EACCES
+46 http fetch GET https://registry.npmjs.org/@angular%2frouter attempt 3 failed with EACCES
+47 silly fetch manifest rxjs@~7.8.0
+48 silly packumentCache full:https://registry.npmjs.org/rxjs cache-miss
+49 http fetch GET https://registry.npmjs.org/rxjs attempt 1 failed with EACCES
+50 http fetch GET https://registry.npmjs.org/rxjs attempt 2 failed with EACCES
+51 http fetch GET https://registry.npmjs.org/rxjs attempt 3 failed with EACCES
+52 silly fetch manifest tslib@^2.3.0
+53 silly packumentCache full:https://registry.npmjs.org/tslib cache-miss
+54 http fetch GET https://registry.npmjs.org/tslib attempt 1 failed with EACCES
+55 http fetch GET https://registry.npmjs.org/tslib attempt 2 failed with EACCES
+56 http fetch GET https://registry.npmjs.org/tslib attempt 3 failed with EACCES
+57 silly fetch manifest @angular/build@^22.2.1
+58 silly packumentCache full:https://registry.npmjs.org/@angular%2fbuild cache-miss
+59 http fetch GET https://registry.npmjs.org/@angular%2fbuild attempt 1 failed with EACCES
+60 http fetch GET https://registry.npmjs.org/@angular%2fbuild attempt 2 failed with EACCES
+61 http fetch GET https://registry.npmjs.org/@angular%2fbuild attempt 3 failed with EACCES
+62 silly fetch manifest @angular/cli@^22.2.1
+63 silly packumentCache full:https://registry.npmjs.org/@angular%2fcli cache-miss
+64 http fetch GET https://registry.npmjs.org/@angular%2fcli attempt 1 failed with EACCES
+65 http fetch GET https://registry.npmjs.org/@angular%2fcli attempt 2 failed with EACCES
+66 http fetch GET https://registry.npmjs.org/@angular%2fcli attempt 3 failed with EACCES
+67 silly fetch manifest @angular/compiler-cli@^22.2.0
+68 silly packumentCache full:https://registry.npmjs.org/@angular%2fcompiler-cli cache-miss
+69 http fetch GET https://registry.npmjs.org/@angular%2fcompiler-cli attempt 1 failed with EACCES
+70 http fetch GET https://registry.npmjs.org/@angular%2fcompiler-cli attempt 2 failed with EACCES
+71 http fetch GET https://registry.npmjs.org/@angular%2fcompiler-cli attempt 3 failed with EACCES
+72 silly fetch manifest jsdom@^30.0.0
+73 silly packumentCache full:https://registry.npmjs.org/jsdom cache-miss
+74 http fetch GET https://registry.npmjs.org/jsdom attempt 1 failed with EACCES
+75 http fetch GET https://registry.npmjs.org/jsdom attempt 2 failed with EACCES
+76 http fetch GET https://registry.npmjs.org/jsdom attempt 3 failed with EACCES
+77 silly fetch manifest prettier@^3.8.1
+78 silly packumentCache full:https://registry.npmjs.org/prettier cache-miss
+79 http fetch GET https://registry.npmjs.org/prettier attempt 1 failed with EACCES
+80 http fetch GET https://registry.npmjs.org/prettier attempt 2 failed with EACCES
+81 http fetch GET https://registry.npmjs.org/prettier attempt 3 failed with EACCES
+82 silly fetch manifest typescript@~6.0.2
+83 silly packumentCache full:https://registry.npmjs.org/typescript cache-miss
+84 http fetch GET https://registry.npmjs.org/typescript attempt 1 failed with EACCES
+85 http fetch GET https://registry.npmjs.org/typescript attempt 2 failed with EACCES
+86 http fetch GET https://registry.npmjs.org/typescript attempt 3 failed with EACCES
+87 silly fetch manifest vitest@^5.0.0
+88 silly packumentCache full:https://registry.npmjs.org/vitest cache-miss
+89 http fetch GET https://registry.npmjs.org/vitest attempt 1 failed with EACCES
+90 http fetch GET https://registry.npmjs.org/vitest attempt 2 failed with EACCES
+91 http fetch GET https://registry.npmjs.org/vitest attempt 3 failed with EACCES
+92 silly placeDep ROOT @angular/build@ OK for: application-tracker@0.0.0 want: ^22.2.1
+93 silly placeDep ROOT @angular/cli@ OK for: application-tracker@0.0.0 want: ^22.2.1
+94 silly placeDep ROOT @angular/common@ OK for: application-tracker@0.0.0 want: ^22.2.0
+95 silly placeDep ROOT @angular/compiler@ OK for: application-tracker@0.0.0 want: ^22.2.0
+96 silly placeDep ROOT @angular/compiler-cli@ OK for: application-tracker@0.0.0 want: ^22.2.0
+97 silly placeDep ROOT @angular/core@ OK for: application-tracker@0.0.0 want: ^22.2.0
+98 silly placeDep ROOT @angular/forms@ OK for: application-tracker@0.0.0 want: ^22.2.0
+99 silly placeDep ROOT @angular/platform-browser@ OK for: application-tracker@0.0.0 want: ^22.2.0
+100 silly placeDep ROOT @angular/router@ OK for: application-tracker@0.0.0 want: ^22.2.0
+101 silly placeDep ROOT jsdom@ OK for: application-tracker@0.0.0 want: ^30.0.0
+102 silly placeDep ROOT prettier@ OK for: application-tracker@0.0.0 want: ^3.8.1
+103 silly placeDep ROOT rxjs@ OK for: application-tracker@0.0.0 want: ~7.8.0
+104 silly placeDep ROOT tslib@ OK for: application-tracker@0.0.0 want: ^2.3.0
+105 silly placeDep ROOT typescript@ OK for: application-tracker@0.0.0 want: ~6.0.2
+106 silly placeDep ROOT vitest@ OK for: application-tracker@0.0.0 want: ^5.0.0
+107 verbose type system
+108 verbose stack FetchError: request to https://registry.npmjs.org/@angular%2fbuild failed, reason: 
+108 verbose stack     at ClientRequest.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\minipass-fetch\lib\index.js:130:14)
+108 verbose stack     at ClientRequest.emit (node:events:509:28)
+108 verbose stack     at emitErrorEvent (node:_http_client:109:11)
+108 verbose stack     at _destroy (node:_http_client:993:9)
+108 verbose stack     at onSocketNT (node:_http_client:1014:5)
+108 verbose stack     at process.processTicksAndRejections (node:internal/process/task_queues:91:21)
+109 error code EACCES
+110 error errno EACCES
+111 error FetchError: request to https://registry.npmjs.org/@angular%2fbuild failed, reason: 
+111 error     at ClientRequest.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\minipass-fetch\lib\index.js:130:14)
+111 error     at ClientRequest.emit (node:events:509:28)
+111 error     at emitErrorEvent (node:_http_client:109:11)
+111 error     at _destroy (node:_http_client:993:9)
+111 error     at onSocketNT (node:_http_client:1014:5)
+111 error     at process.processTicksAndRejections (node:internal/process/task_queues:91:21) {
+111 error   code: 'EACCES',
+111 error   errno: 'EACCES',
+111 error   type: 'system',
+111 error   requiredBy: '.'
+111 error }
+112 error
+112 error The operation was rejected by your operating system.
+112 error It's possible that the file was already in use (by a text editor or antivirus), or that you lack permissions to access it.
+112 error
+112 error If you believe this might be a permissions issue, please double-check the permissions of the file and its containing directories, or try running the command again as root/Administrator.
+113 silly unfinished npm timer reify 1790936496198
+114 silly unfinished npm timer reify:loadTrees 1790936496199
+115 verbose cwd C:\Users\basri\Documents\Codex\2026-10-02\do\application-tracker\frontend
+116 verbose os Windows_NT 10.0.26200
+117 verbose node v24.18.0
+118 verbose npm  v11.16.0
+119 verbose exit 1
+120 verbose code 1
+121 error A complete log of this run can be found in: C:\Users\basri\Documents\Codex\2026-10-02\do\application-tracker\work\npm-cache\_logs\2026-10-02T10_21_35_856Z-debug-0.log
