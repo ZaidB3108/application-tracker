@@ -8,6 +8,7 @@ import com.basri.applicationtracker.activity.StatusHistory;
 import com.basri.applicationtracker.activity.StatusHistoryRepository;
 import com.basri.applicationtracker.activity.Interview;
 import com.basri.applicationtracker.activity.InterviewRepository;
+import com.basri.applicationtracker.activity.InterviewRequest;
 
 @RestController
 @RequestMapping("/api/applications")
@@ -54,6 +55,12 @@ public class JobApplicationController {
 
     @GetMapping("/{id}/history") public List<StatusHistory> history(@PathVariable Long id) { return historyRepository.findAllByApplicationIdOrderByChangedAtDesc(id); }
     @GetMapping("/{id}/interviews") public List<Interview> interviews(@PathVariable Long id) { return interviewRepository.findAllByApplicationIdOrderByInterviewDateAsc(id); }
+    @PostMapping("/{id}/interviews")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Interview scheduleInterview(@PathVariable Long id, @Valid @RequestBody InterviewRequest request) {
+        if (!repository.existsById(id)) throw new IllegalArgumentException("Application not found: " + id);
+        return interviewRepository.save(new Interview(id, request));
+    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -36,6 +36,7 @@ export class App {
   protected readonly activityApplication = signal<JobApplication | null>(null);
   protected readonly statusEvents = signal<StatusEvent[]>([]);
   protected readonly interviewEvents = signal<InterviewEvent[]>([]);
+  protected interviewDraft = { interviewType: 'Technical interview', interviewDate: '', interviewerName: '', notes: '' };
   protected readonly search = signal('');
   protected readonly showForm = signal(false);
   protected readonly applications = signal<JobApplication[]>([]);
@@ -92,6 +93,16 @@ export class App {
       history: this.http.get<StatusEvent[]>(`http://localhost:8081/api/applications/${application.id}/history`),
       interviews: this.http.get<InterviewEvent[]>(`http://localhost:8081/api/applications/${application.id}/interviews`),
     }).subscribe({ next: ({ history, interviews }) => { this.statusEvents.set(history); this.interviewEvents.set(interviews); } });
+  }
+  protected scheduleInterview() {
+    const application = this.activityApplication();
+    if (!application || !this.interviewDraft.interviewDate) return;
+    this.http.post<InterviewEvent>(`http://localhost:8081/api/applications/${application.id}/interviews`, {
+      ...this.interviewDraft, result: 'SCHEDULED',
+    }).subscribe({
+      next: (interview) => { this.interviewEvents.update((current) => [...current, interview]); this.interviewDraft = { interviewType: 'Technical interview', interviewDate: '', interviewerName: '', notes: '' }; },
+      error: () => this.formError = 'Could not schedule the interview.',
+    });
   }
   protected createProfile() {
     this.profileError = '';
