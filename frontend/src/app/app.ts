@@ -11,16 +11,18 @@ interface JobApplication {
   company: string;
   role: string;
   location: string;
+  jobUrl: string;
   notes: string;
   appliedDate: string;
   status: ApplicationStatus;
   logo: string;
 }
 
-interface ApiApplication { id: number; userId: number; companyId: number; roleTitle: string; workMode: string; appliedDate: string; status: ApplicationStatus; notes: string; }
+interface ApiApplication { id: number; userId: number; companyId: number; roleTitle: string; workMode: string; jobPostingUrl: string; appliedDate: string; status: ApplicationStatus; notes: string; }
 interface ApiCompany { id: number; name: string; location: string; }
 interface StatusEvent { id: number; status: ApplicationStatus; changedAt: string; }
-interface InterviewEvent { id: number; interviewType: string; interviewDate: string; interviewerName: string; result: string; notes: string; }
+interface InterviewEvent { id: number; applicationId: number; interviewType: string; interviewDate: string; interviewerName: string; result: string; notes: string; }
+interface UpcomingInterview extends InterviewEvent { company: string; role: string; }
 
 @Component({
   imports: [CommonModule, FormsModule],
@@ -37,6 +39,7 @@ export class App {
   protected readonly activityApplication = signal<JobApplication | null>(null);
   protected readonly statusEvents = signal<StatusEvent[]>([]);
   protected readonly interviewEvents = signal<InterviewEvent[]>([]);
+  protected readonly upcomingInterviews = signal<UpcomingInterview[]>([]);
   protected interviewDraft = { interviewType: 'Technical interview', interviewDate: '', interviewerName: '', notes: '' };
   protected notesDraft = '';
   protected readonly search = signal('');
@@ -67,7 +70,7 @@ export class App {
       name: application.company, location: application.location,
     }).pipe(switchMap((company) => this.http.post<{ id: number }>('http://localhost:8081/api/applications', {
       userId, companyId: company.id, roleTitle: application.role, jobType: 'Full-time', workMode: application.location || 'Not specified',
-      appliedDate: application.appliedDate, status: application.status, source: 'Applyflow', notes: '',
+      appliedDate: application.appliedDate, status: application.status, jobPostingUrl: application.jobUrl || null, source: 'Applyflow', notes: '',
     }))).subscribe({
       next: (saved) => {
         this.applications.update((current) => [{ ...application, notes: '', id: saved.id, logo: application.company.charAt(0).toUpperCase() }, ...current]);
@@ -129,17 +132,24 @@ export class App {
     forkJoin({
       applications: this.http.get<ApiApplication[]>(`http://localhost:8081/api/applications?userId=${userId}`),
       companies: this.http.get<ApiCompany[]>('http://localhost:8081/api/companies'),
+      interviews: this.http.get<InterviewEvent[]>(`http://localhost:8081/api/interviews?userId=${userId}`),
     }).subscribe({
-      next: ({ applications, companies }) => {
+      next: ({ applications, companies, interviews }) => {
         const companiesById = new Map(companies.map((company) => [company.id, company]));
+        const applicationsById = new Map(applications.map((application) => [application.id, application]));
         this.applications.set(applications.map((application) => {
           const company = companiesById.get(application.companyId);
           const name = company?.name ?? 'Unknown company';
-          return { id: application.id, company: name, role: application.roleTitle, location: company?.location || application.workMode || 'Not specified', appliedDate: application.appliedDate, status: application.status, notes: application.notes || '', logo: name.charAt(0).toUpperCase() };
+          return { id: application.id, company: name, role: application.roleTitle, location: company?.location || application.workMode || 'Not specified', jobUrl: application.jobPostingUrl || '', appliedDate: application.appliedDate, status: application.status, notes: application.notes || '', logo: name.charAt(0).toUpperCase() };
         }));
+        this.upcomingInterviews.set(interviews.map((interview) => {
+          const application = applicationsById.get(interview.applicationId);
+          const company = application ? companiesById.get(application.companyId) : undefined;
+          return { ...interview, company: company?.name ?? 'Unknown company', role: application?.roleTitle ?? '' };
+        }).filter((interview) => new Date(interview.interviewDate) >= new Date()));
       },
       error: () => this.formError = 'Could not load saved applications. Check that the backend is running.',
     });
   }
-  private emptyDraft(): Omit<JobApplication, 'id' | 'logo' | 'notes'> { return { company: '', role: '', location: '', appliedDate: '', status: 'SUBMITTED' }; }
+  private emptyDraft(): Omit<JobApplication, 'id' | 'logo' | 'notes'> { return { company: '', role: '', location: '', jobUrl: '', appliedDate: '', status: 'SUBMITTED' }; }
 }

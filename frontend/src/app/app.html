@@ -41,6 +41,7 @@
         </div>
       </article>
     </section>
+    @if (upcomingInterviews().length) {<section class="upcoming"><div><p class="eyebrow">UP NEXT</p><h2>Upcoming interviews</h2></div><div class="upcoming-list">@for (interview of upcomingInterviews(); track interview.id) {<article><span class="company-logo">{{ interview.company.charAt(0) }}</span><div><strong>{{ interview.company }}</strong><p>{{ interview.interviewType }} · {{ interview.role }}</p></div><time>{{ interview.interviewDate | date:'MMM d, h:mm a' }}</time></article>}</div></section>}
     <section class="board-heading">
       <div>
         <h2>Application pipeline</h2>
@@ -65,7 +66,7 @@
               'UNDER_REVIEW', 'ONLINE_ASSESSMENT', 'INTERVIEW', 'OFFER', 'REJECTED']; track status) {<option
                 [value]="status">{{ statusLabel($any(status)) }}</option>}</select>
             <div class="card-footer"><span>⌖ {{ application.location }}</span><time>{{ application.appliedDate }}</time>
-            </div><button class="activity-button" (click)="openActivity(application)">View activity →</button>
+            </div>@if (application.jobUrl) {<a class="activity-button" [href]="application.jobUrl" target="_blank" rel="noopener">View posting ↗</a>}<button class="activity-button" (click)="openActivity(application)">View activity →</button>
           </article>} @empty {<p class="empty">Nothing here yet</p>}</div>
       </section>}</section>
     @if (applicationsFor('REJECTED').length) {<section class="rejection-strip"><span>✉</span><strong>{{
@@ -87,7 +88,7 @@
   <section class="form-grid"><label>Location<input [(ngModel)]="draft.location" name="location"
         placeholder="Remote" /></label><label>Status<select [(ngModel)]="draft.status" name="status">@for (status of
         ['SUBMITTED', 'UNDER_REVIEW', 'ONLINE_ASSESSMENT', 'INTERVIEW', 'OFFER', 'REJECTED']; track status) {<option
-          [value]="status">{{ statusLabel($any(status)) }}</option>}</select></label></section><label>Applied date<input
+          [value]="status">{{ statusLabel($any(status)) }}</option>}</select></label></section><label>Job posting URL<input [(ngModel)]="draft.jobUrl" name="jobUrl" type="url" placeholder="https://..." /></label><label>Applied date<input
       [(ngModel)]="draft.appliedDate" name="appliedDate" type="date" /></label>@if (formError) {<p class="form-error">{{
     formError }}</p>}<button class="primary" type="submit">Save application</button>
 </form>}
