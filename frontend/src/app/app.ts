@@ -32,13 +32,16 @@ interface UpcomingInterview extends InterviewEvent { company: string; role: stri
 })
 export class App {
   private readonly http = inject(HttpClient);
-  protected readonly showProfile = signal(!localStorage.getItem('applyflow-profile-id'));
+  protected readonly showProfile = signal(!localStorage.getItem('applyflow-token'));
+  protected readonly isLogin = signal(false);
   protected profile = { fullName: '', email: '', password: '' };
   protected profileError = '';
   protected formError = '';
   protected readonly activityApplication = signal<JobApplication | null>(null);
   protected readonly statusEvents = signal<StatusEvent[]>([]);
   protected readonly interviewEvents = signal<InterviewEvent[]>([]);
+  protected readonly showRejections = signal(false);
+  protected readonly showInsights = signal(false);
   protected readonly upcomingInterviews = signal<UpcomingInterview[]>([]);
   protected interviewDraft = { interviewType: 'Technical interview', interviewDate: '', interviewerName: '', notes: '' };
   protected notesDraft = '';
@@ -57,8 +60,13 @@ export class App {
     const responses = this.applications().filter((a) => !['SUBMITTED', 'UNDER_REVIEW'].includes(a.status)).length;
     return this.total() ? Math.round((responses / this.total()) * 100) : 0;
   });
+  protected readonly oaCount = computed(() => this.applicationsFor('ONLINE_ASSESSMENT').length);
+  protected readonly rejectedCount = computed(() => this.applicationsFor('REJECTED').length);
+  protected readonly interviewRate = computed(() => this.total() ? Math.round((this.interviews() / this.total()) * 100) : 0);
+  protected readonly offerRate = computed(() => this.total() ? Math.round((this.offers() / this.total()) * 100) : 0);
 
   protected applicationsFor(status: ApplicationStatus) { return this.visibleApplications().filter((a) => a.status === status); }
+  protected readonly rejections = computed(() => this.applications().filter((application) => application.status === 'REJECTED'));
   protected statusLabel(status: ApplicationStatus) { return status.replaceAll('_', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase()); }
   protected addApplication() {
     if (!this.draft.company.trim() || !this.draft.role.trim()) return;
@@ -120,9 +128,11 @@ export class App {
   }
   protected createProfile() {
     this.profileError = '';
-    this.http.post<{ id: number }>('http://localhost:8081/api/profiles', this.profile).subscribe({
-      next: (user) => { localStorage.setItem('applyflow-profile-id', String(user.id)); this.showProfile.set(false); this.loadApplications(); },
-      error: () => this.profileError = 'We could not save your profile. Make sure the backend is running and use a new email address.',
+    const endpoint = this.isLogin() ? 'login' : 'register';
+    const payload = this.isLogin() ? { email: this.profile.email, password: this.profile.password } : this.profile;
+    this.http.post<{ token: string; userId: number }>(`http://localhost:8081/api/auth/${endpoint}`, payload).subscribe({
+      next: (user) => { localStorage.setItem('applyflow-token', user.token); localStorage.setItem('applyflow-profile-id', String(user.userId)); this.showProfile.set(false); this.loadApplications(); },
+      error: () => this.profileError = this.isLogin() ? 'Invalid email or password.' : 'We could not create your account. Try a different email.',
     });
   }
   ngOnInit() { if (!this.showProfile()) this.loadApplications(); }

@@ -1,6 +1,7 @@
 package com.basri.applicationtracker.profile;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,7 +13,8 @@ public class UserAccount {
     @Column(name = "password_hash", nullable = false) private String passwordHash;
     @Column(name = "created_at", insertable = false, updatable = false) private LocalDateTime createdAt;
     protected UserAccount() { }
-    UserAccount(String fullName, String email, String passwordHash) { this.fullName = fullName; this.email = email; this.passwordHash = passwordHash; }
+    public UserAccount(String fullName, String email, String passwordHash) { this.fullName = fullName; this.email = email; this.passwordHash = passwordHash; }
+    @JsonIgnore public String getPasswordHash() { return passwordHash; }
     public Long getId() { return id; }
     public String getFullName() { return fullName; }
     public String getEmail() { return email; }

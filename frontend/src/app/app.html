@@ -1,7 +1,7 @@
 <main class="shell">
   <aside class="sidebar"><a class="brand"><span>✦</span> applyflow</a>
     <nav><a class="nav-item active">⌂ <em>Dashboard</em></a><a class="nav-item">▦ <em>Applications</em><b>{{ total()
-          }}</b></a><a class="nav-item">◷ <em>Activity</em></a><a class="nav-item">⌁ <em>Insights</em></a></nav>
+          }}</b></a><a class="nav-item">◷ <em>Activity</em></a><a class="nav-item" (click)="showInsights.set(true)">⌁ <em>Insights</em></a></nav>
     <div class="sidebar-bottom"><a class="nav-item">⚙ <em>Settings</em></a>
       <div class="profile"><span class="avatar">B</span>
         <div><strong>Basri</strong><small>Job seeker</small></div>
@@ -71,7 +71,7 @@
       </section>}</section>
     @if (applicationsFor('REJECTED').length) {<section class="rejection-strip"><span>✉</span><strong>{{
         applicationsFor('REJECTED').length }} rejection email received</strong>
-      <p>Track it here, then focus on what’s next.</p><button>View rejections →</button>
+      <p>Track it here, then focus on what’s next.</p><button (click)="showRejections.set(true)">View rejections →</button>
     </section>}
   </section>
 </main>
@@ -97,16 +97,16 @@
   <div>
     <section>
       <p class="eyebrow">WELCOME TO APPLYFLOW</p>
-      <h2>Create your profile</h2>
-      <p class="profile-copy">Your personal workspace starts here.</p>
+      <h2>{{ isLogin() ? 'Welcome back' : 'Create your profile' }}</h2>
+      <p class="profile-copy">{{ isLogin() ? 'Sign in to your personal workspace.' : 'Your personal workspace starts here.' }}</p>
     </section>
-  </div><label>Full name<input [(ngModel)]="profile.fullName" name="fullName" placeholder="Your name"
-      required /></label><label>Email<input [(ngModel)]="profile.email" name="email" type="email"
+  </div>@if (!isLogin()) {<label>Full name<input [(ngModel)]="profile.fullName" name="fullName" placeholder="Your name"
+      required /></label>}<label>Email<input [(ngModel)]="profile.email" name="email" type="email"
       placeholder="you@example.com" required /></label><label>Password<input [(ngModel)]="profile.password"
       name="password" type="password" minlength="8" placeholder="At least 8 characters" required /></label>@if
-  (profileError) {<p class="form-error">{{ profileError }}</p>}<button class="primary" type="submit">Create my
-    profile</button>
+  (profileError) {<p class="form-error">{{ profileError }}</p>}<button class="primary" type="submit">{{ isLogin() ? 'Sign in' : 'Create account' }}</button><button type="button" class="activity-button" (click)="isLogin.set(!isLogin()); profileError = ''">{{ isLogin() ? 'Need an account? Register' : 'Already have an account? Sign in' }}</button>
 </form>}
+@if (showRejections()) {<div class="backdrop" (click)="showRejections.set(false)"></div><section class="add-dialog"><div><section><p class="eyebrow">REJECTION INBOX</p><h2>Rejection emails</h2><p class="profile-copy">A record of completed applications, so you can stay focused on the next opportunity.</p></section><button (click)="showRejections.set(false)">×</button></div>@for (application of rejections(); track application.id) {<article class="rejection-item"><span class="company-logo">{{ application.logo }}</span><div><strong>{{ application.company }}</strong><p>{{ application.role }}</p><small>{{ application.notes || 'No email details saved yet.' }}</small></div><button class="activity-button" (click)="showRejections.set(false); openActivity(application)">Open →</button></article>} @empty {<p class="profile-copy">No rejections recorded.</p>}</section>}
 @if (activityApplication(); as application) {<div class="backdrop" (click)="activityApplication.set(null)"></div>
 <section class="add-dialog">
   <div>
@@ -132,3 +132,4 @@
         placeholder="Optional" /></label><button class="primary" type="submit">Schedule interview</button>
   </form>
 </section>}
+@if (showInsights()) {<div class="backdrop" (click)="showInsights.set(false)"></div><section class="add-dialog"><div><section><p class="eyebrow">APPLICATION INSIGHTS</p><h2>Your job-search snapshot</h2><p class="profile-copy">Based on {{ total() }} tracked applications.</p></section><button (click)="showInsights.set(false)">×</button></div><section class="insights-grid"><article><strong>{{ responseRate() }}%</strong><span>Response rate</span></article><article><strong>{{ interviewRate() }}%</strong><span>Interview rate</span></article><article><strong>{{ offerRate() }}%</strong><span>Offer rate</span></article></section><h3>Pipeline breakdown</h3><p>Submitted / Review: <strong>{{ applicationsFor('SUBMITTED').length + applicationsFor('UNDER_REVIEW').length }}</strong></p><p>Online assessments: <strong>{{ oaCount() }}</strong></p><p>Interviews: <strong>{{ interviews() }}</strong></p><p>Offers: <strong>{{ offers() }}</strong></p><p>Rejections: <strong>{{ rejectedCount() }}</strong></p></section>}
